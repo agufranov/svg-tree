@@ -1,8 +1,9 @@
 gulp = require 'gulp'
 browserSync = require('browser-sync').create()
 reload = browserSync.reload
+path = require 'path'
 
-gulpDeps = ['watch', 'coffee', 'jade', 'stylus', 'sourcemaps', 'clean', 'debug', 'util']
+gulpDeps = ['watch', 'coffee', 'jade', 'stylus', 'sourcemaps', 'clean', 'debug', 'util', 'notify', 'plumber']
 
 gulpDeps.forEach (dep) -> eval "#{dep} = require('gulp-#{dep}')" # require each dep
 
@@ -13,40 +14,50 @@ gulp.task 'default', ['watch', 'copy-lib', 'browser-sync']
 gulp.task 'watch', ['watch-coffee', 'watch-jade', 'watch-stylus']
 
 gulp.task 'watch-coffee', ->
-    gulp.src 'src/**/*.coffee'
-        .pipe watch 'src/**/*.coffee', verbose: true, name: 'Coffee'
-        .pipe sourcemaps.init()
-        .pipe coffee bare: true
-            .on 'error', util.log
-        .pipe sourcemaps.write()
-        .pipe gulp.dest 'build'
-        .pipe reload stream: true
+  gulp.src 'src/**/*.coffee'
+    .pipe watch 'src/**/*.coffee', verbose: true, name: 'Coffee'
+    .pipe plumber(errorHandler: coffeeErrorHandler)
+    .pipe sourcemaps.init()
+    .pipe(coffee(bare: true))
+    .pipe sourcemaps.write()
+    .pipe gulp.dest 'build'
+    .pipe reload stream: true
 
 gulp.task 'watch-jade', ->
-    gulp.src 'src/**/*.jade'
-        .pipe watch 'src/**/*.jade', verbose: true, name: 'Jade'
-        .pipe jade(pretty: true)
-        .pipe gulp.dest 'build'
-        .pipe reload stream: true
+  gulp.src 'src/**/*.jade'
+    .pipe watch 'src/**/*.jade', verbose: true, name: 'Jade'
+    .pipe jade(pretty: true)
+    .pipe gulp.dest 'build'
+    .pipe reload stream: true
 
 gulp.task 'watch-stylus', ->
-    gulp.src 'src/**/*.styl'
-        .pipe watch 'src/**/*.styl', verbose: true, name: 'Stylus'
-        .pipe sourcemaps.init()
-        .pipe stylus()
-        .pipe sourcemaps.write()
-        .pipe gulp.dest 'build'
-        .pipe reload stream: true
+  gulp.src 'src/**/*.styl'
+    .pipe watch 'src/**/*.styl', verbose: true, name: 'Stylus'
+    .pipe sourcemaps.init()
+    .pipe stylus()
+    .pipe sourcemaps.write()
+    .pipe gulp.dest 'build'
+    .pipe reload stream: true
 
 gulp.task 'copy-lib', ->
   gulp.src 'lib/**'
     .pipe gulp.dest 'build'
 
 gulp.task 'browser-sync', ->
-    browserSync.init
+  browserSync.init
         server:
-            baseDir: 'build'
+          baseDir: 'build'
 
 gulp.task 'clean', ->
-    gulp.src 'build', read: false
-        .pipe clean()
+  gulp.src 'build', read: false
+    .pipe clean()
+
+coffeeErrorHandler = (err) ->
+  console.log err.toString()
+  notify.onError(
+    title:  "Compilation error [#{err.message}]"
+    subtitle: 'Failure'
+    message: "#{path.relative(process.cwd(), err.filename or err.path)}:#{err.location.first_line}"
+    sound: 'Beep'
+    onLast: true
+  )(err)
