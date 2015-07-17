@@ -1,11 +1,11 @@
-class SvgStackTree extends SvgStackNode
+class StackTreeContainer extends StackContainer
   constructor: (@data, @depth = 0, options) ->
     super options
     @options.groupChildMargin = @options.treeNestedMargin
-    @_headerComponent = @addChild new HtmlStackElement @data.c, htmlWidth: @options.treeWidth - @options.treeDepthShift * @depth
+    @_headerComponent = @addChild new StackHtmlElement @data.c, htmlWidth: @options.treeWidth - @options.treeDepthShift * @depth
     if @data.d
-      @_childrenComponent = @addChild new SvgStackNode groupChildMargin: @options.treeFlatMargin
-      @childTrees = (@_childrenComponent.addChild(new SvgStackTree(childData, @depth + 1, options)) for childData in @data.d)
+      @_childrenComponent = @addChild new StackContainer groupChildMargin: @options.treeFlatMargin
+      @childTrees = (@_childrenComponent.addChild(new StackTreeContainer(childData, @depth + 1, options)) for childData in @data.d)
 
   getDefaultOptions: -> _.merge super(), treeFlatMargin: 20, treeNestedMargin: 5, treeDepthShift: 30, treeWidth: 300, treeParentLineMargin: 10, treeLineClass: 'tree-line'
 

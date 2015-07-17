@@ -1,4 +1,4 @@
-class SvgStackNode extends SvgStackElement
+class StackContainer extends StackElement
   constructor: (options) ->
     super options
     @_children = []

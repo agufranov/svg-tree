@@ -1,4 +1,4 @@
-class HtmlStackElement extends SvgStackElement
+class StackHtmlElement extends StackElement
   constructor: (@content, options) ->
     super options
 
