@@ -34,5 +34,23 @@ $ ->
   # g.addChild new HR '<h3>Hi</h3>'
   # g.addChild new R 160, 70
   # g.renderTo s
+
   window.t = new StackTreeContainer data
   t.renderTo s
+  
+  # window.h1 = new StackHtmlElement 'a'
+  # h2 = new StackHtmlElement 'b'
+  # g = new StackContainer
+  # g.addChild h1
+  # g.addChild h2
+  # g.renderTo s
+
+  $('.content-wrapper').on 'click', (event) ->
+    tree = $(event.currentTarget).data('stack-element').tree
+    tree.toggleCollapse()
+    # tree._arrangeChildren()
+  
+  $('div').mousedown ->
+    setTimeout ->
+      window.getSelection().removeAllRanges()
+    , 0
