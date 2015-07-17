@@ -34,5 +34,5 @@ $ ->
   # g.addChild new HR '<h3>Hi</h3>'
   # g.addChild new R 160, 70
   # g.renderTo s
-  window.t = new T data
+  window.t = new SvgStackTree data
   t.renderTo s
