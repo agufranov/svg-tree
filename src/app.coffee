@@ -69,7 +69,7 @@ $ ->
   # g.addChild h2
   # g.renderTo s
 
-  # window.dep = t._childTrees[0]._childTrees[0]._childTrees[1]._childTrees[3]._children[0]
+  window.dep = t._childTrees[0]._childTrees[0]._childTrees[1]._childTrees[3]._children[0]
 
   $('.content-wrapper').on 'click', (event) ->
     tree = $(event.currentTarget).data('stack-element').tree

@@ -1,6 +1,7 @@
 class StackTreeContainer extends StackContainer
   # TODO Maybe get out the code which is binded with data implementation details (i.e. deps)
   # TODO 0-level child margin should be greater as on photo
+  # TODO Parent SVG resizing
   constructor: (@data, @dataAccessors, options, @depth = 0) ->
     super options
     @options.groupChildMargin = @options.treeNestedMargin
@@ -35,10 +36,6 @@ class StackTreeContainer extends StackContainer
     if @_treeChildrenComponent
       @_treeChildrenComponent.moveBy @options.treeDepthShift, 0
 
-    # Draw child line if is children
-    if @depth > 0
-      @_drawChildLine()
-
   toggleCollapse: ->
     return unless @_treeChildrenComponent
     @_treeChildrenComponent.toggle()
@@ -46,9 +43,18 @@ class StackTreeContainer extends StackContainer
 
   _arrange: ->
     super()
-    if @_treeChildrenComponent
-      # Draw parent line if has children
-      @_drawParentLine()
+    # Draw child line if is children
+    @_drawChildLine() if @depth > 0
+    # Draw parent line if has children
+    @_drawParentLine() if @_treeChildrenComponent
+
+  _drawChildLine: ->
+    h = @_headerComponent.getHeight() / 2
+    d = @options.treeDepthShift - @options.treeParentLineMargin
+    if not @_childLine
+      @_childLine = @_headerComponent._el.line(0, h, -d, h).addClass(@options.treeLineClass)
+    else
+      @_childLine.plot(0, h, -d, h)
     
   _drawParentLine: ->
     # Calculate parent line height
@@ -57,7 +63,7 @@ class StackTreeContainer extends StackContainer
       for childTree in @_childTrees[0..@_childTrees.length - 2]
         h += childTree.getHeight() + @options.treeFlatMargin
 
-    # TODO Line continuation
+    # TODO Refactor line continuation
     if @options.treeRootLineToEnd and @depth is 0
       h += @_childTrees[@_childTrees.length - 1].getHeight()
     else
@@ -65,15 +71,10 @@ class StackTreeContainer extends StackContainer
 
     d = @options.treeDepthShift - @options.treeParentLineMargin
 
-    if @_parentLine
-      @_parentLine.plot(-d, -@options.treeNestedMargin, -d, h)
-    else
+    if not @_parentLine
       @_parentLine = @_treeChildrenComponent._el.line(-d, -@options.treeNestedMargin, -d, h).addClass(@options.treeLineClass)
-
-  _drawChildLine: ->
-    h = @_headerComponent.getHeight() / 2
-    d = @options.treeDepthShift - @options.treeParentLineMargin
-    @_headerComponent._el.line(0, h, -d, h).addClass(@options.treeLineClass)
+    else
+      @_parentLine.plot(-d, -@options.treeNestedMargin, -d, h)
 
   _createHeaderComponent: ->
     if @dataAccessors.isDep @data
