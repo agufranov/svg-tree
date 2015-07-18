@@ -84,6 +84,7 @@ class StackTreeContainer extends StackContainer
   _createHeaderComponent: ->
     if @dataAccessors.isDep @data
       new StackHtmlDepElement @dataAccessors.getContent(@data), @dataAccessors.getDepContent(@data),
+        depMainWidth: @options.treeWidth
         depWidth: @options.treeWidth - @options.treeDepthShift * @depth
         depIgnoreDepHeight: not @options.treeDepHasSurroundingDeps
         depDasharray: @options.treeDepDasharray

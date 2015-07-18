@@ -2,9 +2,10 @@ class StackHtmlDepElement extends StackElement
   # TODO Refactor and arrow
   constructor: (@content1, @content2, options) ->
     super options
-    htmlOptions = _.merge htmlWidth: @options.depWidth, htmlWrapperAdditionalClass: 'dep-wrapper', @options
-    @c1 = new StackHtmlElement @content1, _.merge htmlStrokeDasharray: @options.depDasharray, htmlOptions
-    @c2 = new StackHtmlElement @content2, htmlOptions
+    c1Options = _.merge htmlWidth: @options.depWidth, htmlWrapperAdditionalClass: 'dep-wrapper', @options
+    c2Options = _.merge htmlWidth: @options.depMainWidth, htmlWrapperAdditionalClass: 'dep-wrapper', htmlStrokeDasharray: @options.depDasharray, @options
+    @c1 = new StackHtmlElement @content1, c1Options
+    @c2 = new StackHtmlElement @content2, c2Options
 
   getDefaultOptions: -> _.merge super(), depMargin: 30, depDasharray: '10 5'
 
