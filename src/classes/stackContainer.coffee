@@ -22,15 +22,15 @@ class StackContainer extends StackElement
 
   _arrange: ->
     heightAcc = 0
-    if not @_children.length
+    if not @_children.length > 0
       @height = heightAcc
       return
     for child, index in @_children
-      if child.visible()
+      unless child.ignoreHeight()
         child.moveTo null, heightAcc
         heightAcc += child.getHeight()
-        debugger if _.isNaN heightAcc
-        heightAcc += @options.groupChildMargin if index < @_children.length - 1
+        heightAcc += @options.groupChildMargin
+    heightAcc -= @options.groupChildMargin
     @height = heightAcc
     @_fireHeightChanged()
 
@@ -43,4 +43,3 @@ class StackContainer extends StackElement
   endUpdate: ->
     @_updating = false
     @_childHeightChanged()
-

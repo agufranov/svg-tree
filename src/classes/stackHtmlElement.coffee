@@ -6,15 +6,25 @@ class StackHtmlElement extends StackElement
 
   renderTo: (_parentEl) ->
     super _parentEl
-    r = @_el.rect()
-    f = @_el.foreignObject()
+    @_rect = @_el.rect().stroke(dasharray: @options.htmlStrokeDasharray)
+    @_foreignObject = @_el.foreignObject()
+    @_renderContents()
+
+  _renderContents: ->
     wrapper = $('<div>')
       .addClass 'content-wrapper'
       .css padding: @options.htmlPadding, float: 'left', width: @options.htmlWidth
       .data 'stack-element', @
       .html @content
-    f.appendChild wrapper[0]
-    wrapperSize = [ wrapper.outerWidth(), wrapper.outerHeight() ]
-    r.size wrapperSize...
-    f.size wrapperSize...
+
+    foNode = @_foreignObject.node
+    foNode.removeChild(foNode.firstChild) while foNode.firstChild
+    foNode.appendChild wrapper[0]
+    wrapperSize = [ wrapper.width(), wrapper.outerHeight() ]
+    @_rect.size wrapperSize...
+    @_foreignObject.size wrapperSize...
     @_fireHeightChanged()
+
+  updateContent: (content) ->
+    @content = content
+    @_renderContents()

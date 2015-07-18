@@ -34,6 +34,8 @@ class StackElement
   hide: -> @_el.hide()
   toggle: -> if @visible() then @hide() else @show()
 
+  ignoreHeight: -> @options.ignoreHeight or not @visible()
+
   # Events
   onHeightChanged: (cb) ->
     @__heightChangedCallbacks.push cb
