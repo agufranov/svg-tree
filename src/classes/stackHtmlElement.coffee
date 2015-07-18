@@ -8,9 +8,9 @@ class StackHtmlElement extends StackElement
     super _parentEl
     @_rect = @_el.rect().stroke(dasharray: @options.htmlStrokeDasharray)
     @_foreignObject = @_el.foreignObject()
-    @_renderContents()
+    @_renderContents false
 
-  _renderContents: ->
+  _renderContents: (animate) ->
     wrapper = $('<div>')
       .addClass @options.htmlWrapperClass
       .addClass @options.htmlWrapperAdditionalClass
@@ -23,10 +23,13 @@ class StackHtmlElement extends StackElement
     foNode.removeChild(foNode.firstChild) while foNode.firstChild
     foNode.appendChild wrapper
     wrapperSize = [ $(wrapper).width(), $(wrapper).outerHeight() ]
-    @_rect.size wrapperSize...
-    @_foreignObject.size wrapperSize...
+    @height = wrapperSize[1]
+    @_animate(@_rect, animate).size(wrapperSize...)
+    @_animate(@_foreignObject, animate).size(wrapperSize...)
     @_fireHeightChanged()
+
+  getHeight: -> @height
 
   updateContent: (content) ->
     @content = content
-    @_renderContents()
+    @_renderContents true

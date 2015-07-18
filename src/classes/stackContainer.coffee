@@ -17,29 +17,29 @@ class StackContainer extends StackElement
 
   addChild: (child) ->
     @_children.push child
-    child.onHeightChanged @_childHeightChanged.bind @
+    child.onHeightChanged => @_childHeightChanged true
     child
 
-  _arrange: ->
+  _arrange: (animate) ->
     heightAcc = 0
     if not @_children.length > 0
       @height = heightAcc
       return
     for child, index in @_children
       unless child.ignoreHeight()
-        child.moveTo null, heightAcc
+        child.moveTo null, heightAcc, animate
         heightAcc += child.getHeight()
         heightAcc += @options.groupChildMargin
     heightAcc -= @options.groupChildMargin
     @height = heightAcc
     @_fireHeightChanged()
 
-  _childHeightChanged: ->
-    @_arrange() unless @_updating
+  _childHeightChanged: (animate) ->
+    @_arrange(animate) unless @_updating
 
   beginUpdate: ->
     @_updating = true
 
   endUpdate: ->
     @_updating = false
-    @_childHeightChanged()
+    @_childHeightChanged false

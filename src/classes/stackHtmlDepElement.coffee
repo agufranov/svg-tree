@@ -14,23 +14,25 @@ class StackHtmlDepElement extends StackElement
     @g = @_el.group()
     @c1.renderTo @g
     @c2.renderTo @g
-    @_arrangeDep()
-    @c1.onHeightChanged @_arrangeDep.bind @
-    @c2.onHeightChanged @_arrangeDep.bind @
+    @_arrangeDep false
+    @c1.onHeightChanged =>
+      @_arrangeDep true
+    @c2.onHeightChanged =>
+      @_arrangeDep true
 
-    @c1.dep = @c2.dep = @ # debug, breaks on html el update
+    @c1.dep = @c2.dep = @ # debug
     # TODO think how to bind to dom rightly
 
-  _arrangeDep: ->
+  _arrangeDep: (animate) ->
     diff = (@c1.getHeight() - @c2.getHeight()) / 2
-    @c1.moveTo 0, null
-    @c2.moveTo @options.depWidth + @options.depMargin, null
+    @c1.moveTo 0, null, animate
+    @c2.moveTo @options.depWidth + @options.depMargin, null, animate
     if @options.depIgnoreDepHeight or @c1.getHeight() > @c2.getHeight()
-      @c1.moveTo null, 0
-      @c2.moveTo null, diff
+      @c1.moveTo null, 0, animate
+      @c2.moveTo null, diff, animate
     else
-      @c1.moveTo null, -diff
-      @c2.moveTo null, 0
+      @c1.moveTo null, -diff, animate
+      @c2.moveTo null, 0, animate
     @_drawArrow()
     @_fireHeightChanged()
 
@@ -38,8 +40,8 @@ class StackHtmlDepElement extends StackElement
 
   _drawArrow: ->
     h2 = @getHeight() / 2
-    points = [@options.depWidth, h2, @options.depWidth + @options.depMargin, h2]
+    points = [[@options.depWidth, h2], [@options.depWidth + @options.depMargin, h2]]
     if not @_arrow
-      @_arrow = @g.line(points...).addClass(@options.depLineClass)
+      @_arrow = @g.polyline(points).addClass(@options.depLineClass)
     else
-      @_arrow.plot(points...)
+      @_animate(@_arrow, true).plot(points)

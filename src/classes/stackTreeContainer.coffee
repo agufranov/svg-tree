@@ -2,7 +2,7 @@ class StackTreeContainer extends StackContainer
   # TODO Maybe get out the code which is binded with data implementation details (i.e. deps)
   # TODO 0-level child margin should be greater as on photo
   # TODO Parent SVG resizing
-  # TODO Animate (change lines to polylines)
+  # TODO [DONE] Animate (change lines to polylines)
   # TODO [DONE] Dep element right arranging
   constructor: (@data, @dataAccessors, options, @depth = 0) ->
     super options
@@ -17,7 +17,7 @@ class StackTreeContainer extends StackContainer
     # Create children
     childrenData = @dataAccessors.getChildrenArray @data
     if childrenData
-      @_treeChildrenComponent = @addChild new StackContainer groupChildMargin: @options.treeFlatMargin
+      @_treeChildrenComponent = @addChild new StackContainer groupChildMargin: @options.treeFlatMargin, animationDuration: @options.animationDuration
       @_childTrees = []
       for i in [0...childrenData.length]
         childData = childrenData[i]
@@ -41,26 +41,25 @@ class StackTreeContainer extends StackContainer
 
   toggleCollapse: ->
     return unless @_treeChildrenComponent
-    @_treeChildrenComponent.toggle()
-    @_arrange()
+    @_treeChildrenComponent.fadeToggle => @_arrange true
 
-  _arrange: ->
-    super()
+  _arrange: (animate) ->
+    super animate
     # Draw child line if is children
-    @_drawChildLine() if @depth > 0
+    @_drawChildLine animate if @depth > 0
     # Draw parent line if has children
-    @_drawParentLine() if @_treeChildrenComponent
+    @_drawParentLine animate if @_treeChildrenComponent
 
-  _drawChildLine: ->
+  _drawChildLine: (animate) ->
     h = @_headerComponent.getHeight() / 2
     d = @options.treeDepthShift - @options.treeParentLineMargin
-    points = [0, h, -d, h]
+    points = [[0, h], [-d, h]]
     if not @_childLine
-      @_childLine = @_headerComponent._el.line(points...).addClass(@options.treeLineClass)
+      @_childLine = @_headerComponent._el.polyline(points).addClass(@options.treeLineClass)
     else
-      @_childLine.plot(points...)
+      @_animate(@_childLine, animate).plot(points)
     
-  _drawParentLine: ->
+  _drawParentLine: (animate) ->
     # Calculate parent line height
     h = 0
     if @_childTrees.length > 1
@@ -75,15 +74,16 @@ class StackTreeContainer extends StackContainer
 
     d = @options.treeDepthShift - @options.treeParentLineMargin
 
-    points = [-d, -@options.treeNestedMargin, -d, h]
+    points = [[-d, -@options.treeNestedMargin], [-d, h]]
     if not @_parentLine
-      @_parentLine = @_treeChildrenComponent._el.line(points...).addClass(@options.treeLineClass)
+      @_parentLine = @_treeChildrenComponent._el.polyline(points).addClass(@options.treeLineClass)
     else
-      @_parentLine.plot(points...)
+      @_animate(@_parentLine, animate).plot(points)
 
   _createHeaderComponent: ->
     if @dataAccessors.isDep @data
       new StackHtmlDepElement @dataAccessors.getContent(@data), @dataAccessors.getDepContent(@data),
+        animationDuration: @options.animationDuration
         depMainWidth: @options.treeWidth
         depWidth: @options.treeWidth - @options.treeDepthShift * @depth
         depIgnoreDepHeight: not @options.treeDepHasSurroundingDeps
@@ -91,4 +91,5 @@ class StackTreeContainer extends StackContainer
         depLineClass: @options.treeLineClass
     else
       new StackHtmlElement @dataAccessors.getContent(@data),
+        animationDuration: @options.animationDuration
         htmlWidth: @options.treeWidth - @options.treeDepthShift * @depth

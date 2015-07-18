@@ -10,7 +10,11 @@ $ ->
             d: [
               { c: '<div>121</div><div><a href="#">here</a></div><div><span>pp</span></div>' }
               { c: '122', d: [
-                { c: '1221' }
+                { c: '1221', d: [
+                  { c: '1' }
+                  { c: '2' }
+                  { cc: '3' }
+                ]}
                 { c: '1222' }
                 { c: '1223' }
                 { cc: 'd1' }
@@ -66,6 +70,7 @@ $ ->
     getContent: (data) -> data.c or data.cc
     getChildrenArray: (data) -> data.d
   }, {
+    animationDuration: 300
     treeDepDasharray: '10 2'
     treeRootLineToEnd: true
   }
@@ -99,3 +104,6 @@ $ ->
     setTimeout ->
       window.getSelection().removeAllRanges()
     , 0
+
+  # s.clear()
+  # window.r = s.rect 200, 50
