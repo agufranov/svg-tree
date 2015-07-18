@@ -2,13 +2,16 @@ class StackTreeContainer extends StackContainer
   # TODO Maybe get out the code which is binded with data implementation details (i.e. deps)
   # TODO 0-level child margin should be greater as on photo
   # TODO Parent SVG resizing
+  # TODO Animate (change lines to polylines)
+  # TODO [DONE] Dep element right arranging
   constructor: (@data, @dataAccessors, options, @depth = 0) ->
     super options
     @options.groupChildMargin = @options.treeNestedMargin
 
     # Create header
     @_headerComponent = @_createHeaderComponent()
-    @_headerComponent.tree = @
+    @_headerComponent.tree = @ # debug
+    # TODO think how to bind to dom rightly
     @addChild @_headerComponent
 
     # Create children
@@ -51,10 +54,11 @@ class StackTreeContainer extends StackContainer
   _drawChildLine: ->
     h = @_headerComponent.getHeight() / 2
     d = @options.treeDepthShift - @options.treeParentLineMargin
+    points = [0, h, -d, h]
     if not @_childLine
-      @_childLine = @_headerComponent._el.line(0, h, -d, h).addClass(@options.treeLineClass)
+      @_childLine = @_headerComponent._el.line(points...).addClass(@options.treeLineClass)
     else
-      @_childLine.plot(0, h, -d, h)
+      @_childLine.plot(points...)
     
   _drawParentLine: ->
     # Calculate parent line height
@@ -71,13 +75,19 @@ class StackTreeContainer extends StackContainer
 
     d = @options.treeDepthShift - @options.treeParentLineMargin
 
+    points = [-d, -@options.treeNestedMargin, -d, h]
     if not @_parentLine
-      @_parentLine = @_treeChildrenComponent._el.line(-d, -@options.treeNestedMargin, -d, h).addClass(@options.treeLineClass)
+      @_parentLine = @_treeChildrenComponent._el.line(points...).addClass(@options.treeLineClass)
     else
-      @_parentLine.plot(-d, -@options.treeNestedMargin, -d, h)
+      @_parentLine.plot(points...)
 
   _createHeaderComponent: ->
     if @dataAccessors.isDep @data
-      new StackHtmlDepElement @dataAccessors.getContent(@data), @dataAccessors.getDepContent(@data), depWidth: @options.treeWidth - @options.treeDepthShift * @depth, depIgnoreDepHeight: not @options.treeDepHasSurroundingDeps, depDasharray: @options.treeDepDasharray
+      new StackHtmlDepElement @dataAccessors.getContent(@data), @dataAccessors.getDepContent(@data),
+        depWidth: @options.treeWidth - @options.treeDepthShift * @depth
+        depIgnoreDepHeight: not @options.treeDepHasSurroundingDeps
+        depDasharray: @options.treeDepDasharray
+        depLineClass: @options.treeLineClass
     else
-      new StackHtmlElement @dataAccessors.getContent(@data), htmlWidth: @options.treeWidth - @options.treeDepthShift * @depth
+      new StackHtmlElement @dataAccessors.getContent(@data),
+        htmlWidth: @options.treeWidth - @options.treeDepthShift * @depth

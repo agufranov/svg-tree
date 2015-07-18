@@ -35,6 +35,15 @@ $ ->
   # data = {
   #   c: 'a'
   #   d: [
+  #     { cc: '<div style="height:80px">A</div>', ccc: '<div style="height:180px">A</div>' }
+  #     { c: 3 }
+  #     { cc: '2' }
+  #   ]
+  # }
+
+  # data = {
+  #   c: 'a'
+  #   d: [
   #     { cc: '1' }
   #     { cc: '2' }
   #     { c: 'b' }
@@ -53,7 +62,7 @@ $ ->
 
   window.t = new StackTreeContainer data, {
     isDep: (data) -> !!data.cc
-    getDepContent: (data) -> '<h3>[dep]</h3>' + data.cc
+    getDepContent: (data) -> data.ccc or '<h3>[dep]</h3>' + data.cc
     getContent: (data) -> data.c or data.cc
     getChildrenArray: (data) -> data.d
   }, {
@@ -61,6 +70,11 @@ $ ->
     treeRootLineToEnd: true
   }
   t.renderTo s
+
+  window.dep = t._childTrees[0]._headerComponent
+  window.randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
+  window.f = -> dep.c1.updateContent randh()
+  window.g = -> dep.c2.updateContent randh()
   
   # window.h1 = new StackHtmlElement 'a'
   # h2 = new StackHtmlElement 'b'
@@ -69,12 +83,17 @@ $ ->
   # g.addChild h2
   # g.renderTo s
 
-  window.dep = t._childTrees[0]._childTrees[0]._childTrees[1]._childTrees[3]._children[0]
+  # window.dep = t._childTrees[0]._childTrees[0]._childTrees[1]._childTrees[3]._children[0]
 
   $('.content-wrapper').on 'click', (event) ->
     tree = $(event.currentTarget).data('stack-element').tree
-    tree?.toggleCollapse?()
-    # tree._arrangeChildren()
+    if tree
+      tree.toggleCollapse()
+
+  $(document).on 'click', '.dep-wrapper', (event) ->
+    dep = $(event.currentTarget).data('stack-element').dep
+    dep.c1.updateContent randh()
+    dep.c2.updateContent randh()
   
   $('div').mousedown ->
     setTimeout ->
