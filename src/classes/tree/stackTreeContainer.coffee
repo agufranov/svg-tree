@@ -70,7 +70,7 @@ class StackTreeContainer extends StackContainer
   _arrange: (animate) ->
     super animate
     # Draw child line if is children
-    @_drawChildLine animate if @options.treeDrawChildLine
+    @_drawChildLine animate if @options.treeDrawChildLine and @depth > 0
     # Draw parent line if has children
     @_drawParentLine animate if @_treeOwnChildrenComponent
     # Draw unbinded line if has unbinded
@@ -150,14 +150,14 @@ class StackTreeHeaderProvider
           htmlRectFill: @tree.options.treeRectFill
           htmlRectStrokeColor: @tree.options.treeRectStrokeColor
           htmlRectStrokeDasharray: @tree.options.treeRectStrokeDasharray
-      if @tree.depth is 0 and (additionalContent = @tree.dataAccessors.getRootHeaderAdditionalContent(@tree.data))
+      if @tree.depth is 0 and not @tree.dataAccessors.hasDeps(@tree.data)
         h = new StackVerticalContainer
           animationDuration: @tree.options.animationDuration
           vertMargin: @tree.options.treeWidth
         # new StackHtmlElement '<h1>[root]</h1>' + @tree.dataAccessors.getContent(@tree.data),
         #   animationDuration: @tree.options.animationDuration
         #   htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
-        headerAddition = new StackHtmlElement additionalContent,
+        headerAddition = new StackHtmlElement  '<span class="root-header-addition">There are no service dependencies</span>',
           animationDuration: @tree.options.animationDuration
           htmlWidth: @tree.options.treeWidth
           htmlRect: false
