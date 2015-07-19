@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.0/lodash.js"></script>
+    <script src="svg.js"></script>
+    <script src="svg.foreignobject.js"></script>
+    <script src="classes/stackElement.js"></script>
+    <script src="classes/stackHtmlElement.js"></script>
+    <script src="classes/stackAbstractContainer.js"></script>
+    <script src="classes/stackContainer.js"></script>
+    <script src="classes/stackHorizontalContainer.js"></script>
+    <script src="classes/stackHtmlDepElement.js"></script>
+    <script src="classes/tree/stackHtmlElementWithCollapser.js"></script>
+    <script src="classes/tree/stackTreeContainer.js"></script>
+    <script src="classes/tree/structureTree.js"></script>
+    <script src="classes/tree/structureTreeArrow.js"></script>
+    <script src="classes/tree/structureTreeUnbindedX.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="font-awesome.min.css">
+    <style>
+      .root-header-addition { color: gray; font-size: 12px; margin-left: 50px; }
+      .content-wrapper > * { float: left; }
+      .tree-header-collapser { float: right; background-color: white; width: 30px; height: 30px; line-height: 30px; margin-top: 2.5px; text-align: center; border-radius: 50%; color: gray; cursor: pointer; }
+      .fa { display: inline; }
+    </style>
+  </head>
+  <body>
+    <svg id="svg" style="width: 2000px; height: 2000px;"></svg>
+  </body>
+</html>
