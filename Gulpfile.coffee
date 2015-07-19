@@ -2,6 +2,7 @@ gulp = require 'gulp'
 browserSync = require('browser-sync').create()
 reload = browserSync.reload
 path = require 'path'
+runSequence = require 'run-sequence'
 
 gulpDeps = ['watch', 'coffee', 'jade', 'stylus', 'sourcemaps', 'clean', 'debug', 'util', 'notify', 'plumber', 'concat']
 
@@ -13,10 +14,8 @@ gulp.task 'default', ['watch', 'copy-lib', 'browser-sync']
 
 gulp.task 'watch', ['watch-coffee', 'watch-jade', 'watch-stylus']
 
-gulp.task 'concat', ['concat-compile', 'concat-concat'], ->
-  gulp.src 'concat'
-    .pipe clean()
-  console.log 'done'
+gulp.task 'concat', ->
+  runSequence 'concat-compile', 'concat-concat', 'concat-cleanup'
 
 gulp.task 'concat-compile', ->
   gulp.src 'src/**/*.coffee'
@@ -40,7 +39,12 @@ gulp.task 'concat-concat', ->
     'concat/classes/tree/structureTreeFactory.js'
   ]
     .pipe concat 'svgTree.js'
+    # .pipe gulp.dest '.'
     .pipe gulp.dest '/home/anthrax/dev/vermilion/vermilion/ui/client/vendor/'
+    
+gulp.task 'concat-cleanup', ->
+  gulp.src 'concat'
+    .pipe clean()
 
 gulp.task 'watch-coffee', ->
   gulp.src 'src/**/*.coffee'
