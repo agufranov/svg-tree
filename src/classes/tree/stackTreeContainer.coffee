@@ -108,6 +108,7 @@ class StackTreeHeaderProvider
           animationDuration: @tree.options.animationDuration
           htmlWidth: @tree.options.treeWidth
           htmlRect: false
+          ignoreHeight: true
         f = ->
           randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
           header.updateContent randh()
