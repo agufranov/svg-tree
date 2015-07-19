@@ -5,8 +5,8 @@ class StackTreeContainer extends StackContainer
   # TODO [DONE] Animate (change lines to polylines)
   # TODO [DONE] Dep element right arranging
   constructor: (@data, @dataAccessors, @_headerProviderClass, options, @depth = 0) ->
-    @_headerProvider = new @_headerProviderClass @
     super options
+    @_headerProvider = new @_headerProviderClass @
     @options.groupChildMargin = @options.treeNestedMargin
 
     # Create header

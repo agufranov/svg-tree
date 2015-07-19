@@ -3,6 +3,7 @@ $ ->
   {
     c: '<span>ALPHABETAGAMMA</span>'
     add: '<span class="root-header-addition">There are no service dependencies</span>'
+    parent: '<h4>Parent</h4>'
     d: [
       {
         c: '1', d: [
@@ -65,12 +66,13 @@ $ ->
   # g.addChild new R 160, 70
   # g.renderTo s
 
-  window.t = new StackTreeContainer data, {
+  window.t = new StructureTree data, {
     isDep: (data) -> !!data.cc
     getDepContent: (data) -> data.ccc or '<h3>[dep]</h3>' + data.cc
     getContent: (data) -> data.c or data.cc
     getChildrenArray: (data) -> data.d
     getRootHeaderAdditionalContent: (data) -> data.add
+    getParentContent: (data) -> data.parent
   }, StackTreeHeaderProvider, {
     animationDuration: 300
     treeDepDasharray: '10 2'
@@ -78,7 +80,7 @@ $ ->
   }
   t.renderTo s
 
-  window.dep = t._childTrees[0]._headerComponent
+  window.dep = t._treeComponent._childTrees[0]._headerComponent
   window.randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
   window.f = -> dep.c1.updateContent randh()
   window.g = -> dep.c2.updateContent randh()
