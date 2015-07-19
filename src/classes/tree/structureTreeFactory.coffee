@@ -5,3 +5,4 @@ StructureTreeFactory =
     tree = new StructureTree data, dataAccessors, StackTreeHeaderProvider, options
     stackRoot.addChild tree
     stackRoot.renderTo svg
+    tree

@@ -27,6 +27,7 @@ gulp.task 'concat', ->
     'build/classes/tree/structureTree.js'
     'build/classes/tree/structureTreeArrow.js'
     'build/classes/tree/structureTreeUnbindedX.js'
+    'build/classes/tree/structureTreeFactory.js'
   ]
     .pipe concat 'svgTree.js'
     .pipe gulp.dest '/home/anthrax/dev/vermilion/vermilion/ui/client/vendor/'

@@ -5,7 +5,7 @@ class StackHtmlElement extends StackElement
     @prepended = []
     @appended = []
 
-  getDefaultOptions: -> _.merge super(), htmlPadding: 10, htmlWidth: null, htmlWrapperClass: 'content-wrapper', htmlRect: true, htmlRectStrokeColor: 'gray', htmlRectStrokeWidth: 1, htmlRectFill: '#EEF', htmlMinHeight: 30
+  getDefaultOptions: -> _.extend super(), htmlPadding: 10, htmlWidth: null, htmlWrapperClass: 'content-wrapper', htmlRect: true, htmlRectStrokeColor: 'gray', htmlRectStrokeWidth: 1, htmlRectFill: '#EEF', htmlMinHeight: 30
 
   renderTo: (_parentEl) ->
     super _parentEl
@@ -21,9 +21,6 @@ class StackHtmlElement extends StackElement
         .css padding: @options.htmlPadding, float: 'left', width: @options.htmlWidth - 2 * @options.htmlPadding, 'min-height': @options.htmlMinHeight
         .data 'stack-element', @
         .get 0
-      while @__wrapperEventHandlers.length > 0
-        t = @__wrapperEventHandlers.shift()
-        $(@_wrapper).on t...
 
     innerWrapper = $('<div>').addClass('stack-html-inner-wrapper')
     innerWrapper.html @content
@@ -35,10 +32,18 @@ class StackHtmlElement extends StackElement
     for el in @appended
       $(@_wrapper).append el
 
+    # Hackish
+    $(@_wrapper).appendTo document.body
+    wrapperSize = [ $(@_wrapper).outerWidth(), $(@_wrapper).outerHeight() ]
+    console.log "height: #{wrapperSize[1]}"
+    $(@_wrapper).remove()
+
     foNode = @_foreignObject.node
     foNode.removeChild(foNode.firstChild) while foNode.firstChild
     foNode.appendChild @_wrapper
-    wrapperSize = [ $(@_wrapper).outerWidth(), $(@_wrapper).outerHeight() ]
+    for eventHandler in @__wrapperEventHandlers
+      $(@_wrapper).on eventHandler...
+    # wrapperSize = [ $(@_wrapper).outerWidth(), $(@_wrapper).outerHeight() ]
     @height = wrapperSize[1]
     @_animate(@_rect, animate).size(wrapperSize...) if @options.htmlRect
     @_animate(@_foreignObject, animate).size(wrapperSize...)

@@ -13,7 +13,7 @@ $ ->
   dataAccessors.hasDeps = (data) ->
     _.any dataAccessors.getChildrenArray(data), (childData) -> dataAccessors.isDep(childData)
 
-  StructureTreeFactory.renderTree document.getElementById('svg'), treeData, dataAccessors, {
+  window.tree = StructureTreeFactory.renderTree document.getElementById('svg'), treeData, dataAccessors, {
     animationDuration: 50
     treeDepDasharray: '10 2'
     treeFlatMargin: 20

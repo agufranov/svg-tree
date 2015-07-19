@@ -4,7 +4,7 @@ class StackContainer extends StackAbstractContainer
     @_children = []
     @_updating = false
 
-  getDefaultOptions: -> _.merge super(), groupChildMargin: 5
+  getDefaultOptions: -> _.extend super(), groupChildMargin: 5
 
   getHeight: -> @height
 

@@ -2,7 +2,7 @@ class StackVerticalContainer extends StackAbstractContainer
   constructor: (options) ->
     super options
 
-  getDefaultOptions: -> _.merge super(), vertMargin: 200
+  getDefaultOptions: -> _.extend super(), vertMargin: 200
 
   getHeight: -> @height
 

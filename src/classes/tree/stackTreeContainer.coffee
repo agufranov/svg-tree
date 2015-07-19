@@ -41,16 +41,16 @@ class StackTreeContainer extends StackContainer
     for i in [0...childrenData.length]
       childData = childrenData[i]
       childOpts = _.clone @options
-      _.merge childOpts, treeDrawChildLine: true
+      _.extend childOpts, treeDrawChildLine: true
       # If tree has right side & has such surrounding trees, we need to consider its right side height
       if @dataAccessors.isDep(childData) and ((i < childrenData.length - 1 and @dataAccessors.isDep(childrenData[i + 1])) or (i > 0 and @dataAccessors.isDep(childrenData[i - 1])))
-        _.merge childOpts, { treeDepHasSurroundingDeps: true }
-      _.merge childOpts, options
+        _.extend childOpts, { treeDepHasSurroundingDeps: true }
+      _.extend childOpts, options
       childTree = new StackTreeContainer(childData, @dataAccessors, @_headerProviderClass, childOpts, @depth + 1)
       container.addChild childTree
       arrayToStore.push childTree
 
-  getDefaultOptions: -> _.merge super(), treeFlatMargin: 20, treeNestedMargin: 5, treeRootNestedMargin: 50, treeDepthShift: 30, treeWidth: 300, treeParentLineMargin: 10, treeDrawChildLine: true, treeLineStroke: 'gray', treeUnbindedLineStroke: 'red', treeRectFill: '#EEF', treeRectStrokeColor: 'gray', treeStrokeDasharray: 'none', treeUnbindedRectFill: '#FFA', treeUnbindedRectStrokeColor: 'red', treeUnbindedRectStrokeDasharray: '10 5'
+  getDefaultOptions: -> _.extend super(), treeFlatMargin: 20, treeNestedMargin: 5, treeRootNestedMargin: 50, treeDepthShift: 30, treeWidth: 300, treeParentLineMargin: 10, treeDrawChildLine: true, treeLineStroke: 'gray', treeUnbindedLineStroke: 'red', treeRectFill: '#EEF', treeRectStrokeColor: 'gray', treeStrokeDasharray: 'none', treeUnbindedRectFill: '#FFA', treeUnbindedRectStrokeColor: 'red', treeUnbindedRectStrokeDasharray: '10 5'
 
   renderTo: (_parentEl) ->
     super _parentEl

@@ -14,7 +14,7 @@ class StackHtmlElementWithCollapser extends StackHtmlElement
     super()
     @_updateCollapser()
 
-  getDefaultOptions: -> _.merge super(), collapsedTemplate: '<i class="fa fa-angle-double-down">', expandedTemplate: '<i class="fa fa-angle-double-up">', collapserWrapperClass: 'tree-header-collapser'
+  getDefaultOptions: -> _.extend super(), collapsedTemplate: '<i class="fa fa-angle-double-down">', expandedTemplate: '<i class="fa fa-angle-double-up">', collapserWrapperClass: 'tree-header-collapser'
 
   _getCollapserTemplate: ->
     if @tree.collapsed then @options.collapsedTemplate else @options.expandedTemplate

@@ -5,6 +5,7 @@ class StructureTreeArrow extends StackElement
     hw = rw + cw
     h = hw + rh
     @height = h
+    console.log "Arrow position: #{pos}"
     lineLeft = @_el.line 0, h / 2, pos - rw - cw - pad, h / 2
     lineRight = @_el.line pos + rw + cw + pad, h / 2, mw, h / 2
     for line in [lineLeft, lineRight]

@@ -2,8 +2,8 @@ class StackHtmlDepElement extends StackVerticalContainer
   # TODO Arrow
   constructor: (@leftContent, @rightContent, options) ->
     super options
-    leftOptions = _.merge htmlWidth: @options.depWidth, htmlWrapperAdditionalClass: 'dep-wrapper', htmlRectFill: '#F5F5FF', htmlRectStrokeDasharray: @options.depDasharray, @options
-    rightOptions = _.merge htmlWidth: @options.depMainWidth, htmlWrapperAdditionalClass: 'dep-wrapper', ignoreHeight: @options.depIgnoreDepHeight, @options
+    leftOptions = _.extend htmlWidth: @options.depWidth, htmlWrapperAdditionalClass: 'dep-wrapper', htmlRectFill: '#F5F5FF', htmlRectStrokeDasharray: @options.depDasharray, @options
+    rightOptions = _.extend htmlWidth: @options.depMainWidth, htmlWrapperAdditionalClass: 'dep-wrapper', ignoreHeight: @options.depIgnoreDepHeight, @options
     @_leftComponent = new StackHtmlElement @leftContent, leftOptions
     @_rightComponent = new StackHtmlElement @rightContent, rightOptions
     @addChild @_leftComponent
@@ -11,7 +11,7 @@ class StackHtmlDepElement extends StackVerticalContainer
 
     @_leftComponent.dep = @_rightComponent.dep = @ # debug
 
-  getDefaultOptions: -> _.merge super(), vertMargin: @options.depWidth + 30, depDasharray: '10 5'
+  getDefaultOptions: -> _.extend super(), vertMargin: @options.depWidth + 30, depDasharray: '10 5'
 
   _arrange: (animate) ->
     super animate
