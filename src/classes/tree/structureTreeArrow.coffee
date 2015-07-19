@@ -12,9 +12,20 @@ class StructureTreeArrow extends StackElement
       line
         .stroke @options.arrowLineStroke
         .style 'stroke-dasharray', @options.arrowLineDasharray
-    @_el.path "M#{pos} 0 h-#{rw} v-#{rh} h-#{cw} l#{hw},-#{hw} l#{hw},#{hw} h-#{cw} v#{rh} Z"
+    # @_el.path "M#{pos} 0 h-#{rw} v-#{rh} h-#{cw} l#{hw},-#{hw} l#{hw},#{hw} h-#{cw} v#{rh} Z"
+    l = @_el.polyline [
+      [pos, 0]
+      [pos-rw, 0]
+      [pos-rw, -rh]
+      [pos-rw-cw, -rh]
+      [pos-rw-cw+hw, -rh-hw]
+      [pos-rw-cw+hw+hw, -rh]
+      [pos-rw-cw+hw+hw-cw, -rh]
+      [pos-rw-cw+hw+hw-cw, 0]
+    ]
       .stroke @options.arrowStroke
       .fill @options.arrowFill
-      .dy h
+      .move pos - cw - rw, 0
+    l
 
   getHeight: -> @height
