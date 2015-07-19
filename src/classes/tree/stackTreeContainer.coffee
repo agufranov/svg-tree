@@ -1,7 +1,7 @@
 class StackTreeContainer extends StackContainer
   # TODO Maybe get out the code which is binded with data implementation details (i.e. deps)
   # TODO 0-level child margin should be greater as on photo
-  # TODO Parent SVG resizing
+  # TODO [DONE] Parent SVG resizing
   # TODO [DONE] Animate (change lines to polylines)
   # TODO [DONE] Dep element right arranging
   constructor: (@data, @dataAccessors, @_headerProviderClass, options, @depth = 0) ->

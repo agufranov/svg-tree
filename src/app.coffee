@@ -71,6 +71,8 @@ $ ->
   # g.addChild new R 160, 70
   # g.renderTo s
 
+  window.sr = new StackRoot s
+
   window.t = new StructureTree data, {
     isDep: (data) -> !!data.cc
     getDepContent: (data) -> data.ccc or '<h3>[dep]</h3>' + data.cc
@@ -86,7 +88,8 @@ $ ->
     treeNestedMargin: 10
     treeRootNestedMargin: 20
   }
-  t.renderTo s
+  sr.addChild t
+  sr.renderTo s
 
   # window.dep = t._treeComponent._childTrees[0]._headerComponent
   window.randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
