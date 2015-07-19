@@ -94,11 +94,28 @@ class StackTreeHeaderProvider
         depDasharray: @tree.options.treeDepDasharray
         depLineClass: @tree.options.treeLineClass
     else
-      if @tree.depth is 0
-        new StackHtmlElement '<h1>[root]</h1>' + @tree.dataAccessors.getContent(@tree.data),
+      header = new StackHtmlElement @tree.dataAccessors.getContent(@tree.data),
+        animationDuration: @tree.options.animationDuration
+        htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
+      if @tree.depth is 0 and (additionalContent = @tree.dataAccessors.getRootHeaderAdditionalContent(@tree.data))
+        h = new StackVerticalContainer
           animationDuration: @tree.options.animationDuration
-          htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
+          vertMargin: @tree.options.treeWidth
+        # new StackHtmlElement '<h1>[root]</h1>' + @tree.dataAccessors.getContent(@tree.data),
+        #   animationDuration: @tree.options.animationDuration
+        #   htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
+        headerAddition = new StackHtmlElement additionalContent,
+          animationDuration: @tree.options.animationDuration
+          htmlWidth: @tree.options.treeWidth
+          htmlRect: false
+        f = ->
+          randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
+          header.updateContent randh()
+          headerAddition.updateContent randh()
+        header.on 'click', f
+        headerAddition.on 'click', f
+        h.addChild header
+        h.addChild headerAddition
+        h
       else
-        new StackHtmlElement @tree.dataAccessors.getContent(@tree.data),
-          animationDuration: @tree.options.animationDuration
-          htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
+        header

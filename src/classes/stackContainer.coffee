@@ -1,4 +1,4 @@
-class StackContainer extends StackElement
+class StackContainer extends StackAbstractContainer
   constructor: (options) ->
     super options
     @_children = []
@@ -6,23 +6,11 @@ class StackContainer extends StackElement
 
   getDefaultOptions: -> _.merge super(), groupChildMargin: 5
 
-  renderTo: (_parentEl) ->
-    super _parentEl
-    @beginUpdate()
-    for child in @_children
-      child.renderTo @_el
-    @endUpdate()
-
   getHeight: -> @height
-
-  addChild: (child) ->
-    @_children.push child
-    child.onHeightChanged => @_childHeightChanged true
-    child
 
   _arrange: (animate) ->
     heightAcc = 0
-    if not @_children.length > 0
+    if @_children.length is 0
       @height = heightAcc
       return
     for child, index in @_children
@@ -33,13 +21,3 @@ class StackContainer extends StackElement
     heightAcc -= @options.groupChildMargin
     @height = heightAcc
     @_fireHeightChanged()
-
-  _childHeightChanged: (animate) ->
-    @_arrange(animate) unless @_updating
-
-  beginUpdate: ->
-    @_updating = true
-
-  endUpdate: ->
-    @_updating = false
-    @_childHeightChanged false

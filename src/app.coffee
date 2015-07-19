@@ -2,6 +2,7 @@ $ ->
   data =
   {
     c: '<span>ALPHABETAGAMMA</span>'
+    add: '<span class="root-header-addition">There are no service dependencies</span>'
     d: [
       {
         c: '1', d: [
@@ -69,6 +70,7 @@ $ ->
     getDepContent: (data) -> data.ccc or '<h3>[dep]</h3>' + data.cc
     getContent: (data) -> data.c or data.cc
     getChildrenArray: (data) -> data.d
+    getRootHeaderAdditionalContent: (data) -> data.add
   }, StackTreeHeaderProvider, {
     animationDuration: 300
     treeDepDasharray: '10 2'
@@ -97,8 +99,8 @@ $ ->
 
   $(document).on 'click', '.dep-wrapper', (event) ->
     dep = $(event.currentTarget).data('stack-element').dep
-    dep.c1.updateContent randh()
-    dep.c2.updateContent randh()
+    dep._leftComponent.updateContent randh()
+    dep._rightComponent.updateContent randh()
   
   $('div').mousedown ->
     setTimeout ->
