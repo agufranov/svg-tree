@@ -4,6 +4,11 @@ $ ->
     c: '<span>ALPHABETAGAMMA</span>'
     add: '<span class="root-header-addition">There are no service dependencies</span>'
     parent: '<h4>Parent</h4>'
+    unbinded: [
+      c: '1', d: [
+        c: '2'
+      ]
+    ]
     d: [
       {
         c: '1', d: [
@@ -73,22 +78,25 @@ $ ->
     getChildrenArray: (data) -> data.d
     getRootHeaderAdditionalContent: (data) -> data.add
     getParentContent: (data) -> data.parent
+    getUnbindedArray: (data) -> data.unbinded
   }, StackTreeHeaderProvider, {
     animationDuration: 50
     treeDepDasharray: '10 2'
-    treeRootLineToEnd: true
+    treeFlatMargin: 20
+    treeNestedMargin: 10
+    treeRootNestedMargin: 20
   }
   t.renderTo s
 
   # window.dep = t._treeComponent._childTrees[0]._headerComponent
-  # window.randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
+  window.randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
   # window.f = -> dep.c1.updateContent randh()
   # window.g = -> dep.c2.updateContent randh()
   
-  # $(document).on 'click', '.dep-wrapper', (event) ->
-  #   dep = $(event.currentTarget).data('stack-element').dep
-  #   dep._leftComponent.updateContent randh()
-  #   dep._rightComponent.updateContent randh()
+  $(document).on 'click', '.dep-wrapper', (event) ->
+    dep = $(event.currentTarget).data('stack-element').dep
+    dep._leftComponent.updateContent randh()
+    dep._rightComponent.updateContent randh()
   
   # Prevent selection on double click
   $('div').mousedown ->

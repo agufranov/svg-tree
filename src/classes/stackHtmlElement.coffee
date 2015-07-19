@@ -5,11 +5,11 @@ class StackHtmlElement extends StackElement
     @prepended = []
     @appended = []
 
-  getDefaultOptions: -> _.merge super(), htmlPadding: 10, htmlWidth: null, htmlWrapperClass: 'content-wrapper', htmlRect: true
+  getDefaultOptions: -> _.merge super(), htmlPadding: 10, htmlWidth: null, htmlWrapperClass: 'content-wrapper', htmlRect: true, htmlRectStrokeColor: 'gray', htmlRectStrokeWidth: 1, htmlRectFill: '#EEF', htmlMinHeight: 30
 
   renderTo: (_parentEl) ->
     super _parentEl
-    @_rect = @_el.rect().stroke(dasharray: @options.htmlStrokeDasharray) if @options.htmlRect
+    @_rect = @_el.rect().stroke(color: @options.htmlRectStrokeColor, width: @options.htmlRectStrokeWidth, dasharray: @options.htmlRectStrokeDasharray).fill(@options.htmlRectFill) if @options.htmlRect
     @_foreignObject = @_el.foreignObject()
     @_renderContents false
 
@@ -18,7 +18,7 @@ class StackHtmlElement extends StackElement
       @_wrapper = $('<div>')
         .addClass @options.htmlWrapperClass
         .addClass @options.htmlWrapperAdditionalClass
-        .css padding: @options.htmlPadding, float: 'left', width: @options.htmlWidth - 2 * @options.htmlPadding
+        .css padding: @options.htmlPadding, float: 'left', width: @options.htmlWidth - 2 * @options.htmlPadding, 'min-height': @options.htmlMinHeight
         .data 'stack-element', @
         .get 0
       while @__wrapperEventHandlers.length > 0

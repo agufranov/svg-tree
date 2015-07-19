@@ -2,7 +2,7 @@ class StackHtmlDepElement extends StackVerticalContainer
   # TODO Arrow
   constructor: (@leftContent, @rightContent, options) ->
     super options
-    leftOptions = _.merge htmlWidth: @options.depWidth, htmlWrapperAdditionalClass: 'dep-wrapper', htmlStrokeDasharray: @options.depDasharray, @options
+    leftOptions = _.merge htmlWidth: @options.depWidth, htmlWrapperAdditionalClass: 'dep-wrapper', htmlRectFill: '#F5F5FF', htmlRectStrokeDasharray: @options.depDasharray, @options
     rightOptions = _.merge htmlWidth: @options.depMainWidth, htmlWrapperAdditionalClass: 'dep-wrapper', ignoreHeight: @options.depIgnoreDepHeight, @options
     @_leftComponent = new StackHtmlElement @leftContent, leftOptions
     @_rightComponent = new StackHtmlElement @rightContent, rightOptions
@@ -21,6 +21,6 @@ class StackHtmlDepElement extends StackVerticalContainer
     h2 = @getHeight() / 2
     points = [[@options.depWidth, h2], [@options.vertMargin, h2]]
     if not @_arrow
-      @_arrow = @_el.polyline(points).addClass(@options.depLineClass)
+      @_arrow = @_el.polyline(points).stroke(@options.depLineStroke)
     else
       @_animate(@_arrow, true).plot(points)

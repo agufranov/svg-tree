@@ -27,7 +27,7 @@ class StackElement
   getHeight: -> @_el.node.getBBox().height
 
   renderTo: (@_parentEl) ->
-    @_el = @_createEl()
+    @_el = @_createEl().addClass(@__proto__.constructor.name)
 
   _createEl: -> @_parentEl.group()
 
