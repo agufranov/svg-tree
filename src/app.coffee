@@ -69,7 +69,7 @@ $ ->
     getDepContent: (data) -> data.ccc or '<h3>[dep]</h3>' + data.cc
     getContent: (data) -> data.c or data.cc
     getChildrenArray: (data) -> data.d
-  }, {
+  }, StackTreeHeaderProvider, {
     animationDuration: 300
     treeDepDasharray: '10 2'
     treeRootLineToEnd: true

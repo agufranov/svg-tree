@@ -2,11 +2,11 @@ class StackHtmlElement extends StackElement
   constructor: (@content, options) ->
     super options
 
-  getDefaultOptions: -> _.merge super(), htmlPadding: 10, htmlWidth: null, htmlWrapperClass: 'content-wrapper'
+  getDefaultOptions: -> _.merge super(), htmlPadding: 10, htmlWidth: null, htmlWrapperClass: 'content-wrapper', htmlRect: true
 
   renderTo: (_parentEl) ->
     super _parentEl
-    @_rect = @_el.rect().stroke(dasharray: @options.htmlStrokeDasharray)
+    @_rect = @_el.rect().stroke(dasharray: @options.htmlStrokeDasharray) if @options.htmlRect
     @_foreignObject = @_el.foreignObject()
     @_renderContents false
 
@@ -24,7 +24,7 @@ class StackHtmlElement extends StackElement
     foNode.appendChild wrapper
     wrapperSize = [ $(wrapper).width(), $(wrapper).outerHeight() ]
     @height = wrapperSize[1]
-    @_animate(@_rect, animate).size(wrapperSize...)
+    @_animate(@_rect, animate).size(wrapperSize...) if @options.htmlRect
     @_animate(@_foreignObject, animate).size(wrapperSize...)
     @_fireHeightChanged()
 

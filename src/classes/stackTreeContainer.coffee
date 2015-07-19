@@ -4,12 +4,13 @@ class StackTreeContainer extends StackContainer
   # TODO Parent SVG resizing
   # TODO [DONE] Animate (change lines to polylines)
   # TODO [DONE] Dep element right arranging
-  constructor: (@data, @dataAccessors, options, @depth = 0) ->
+  constructor: (@data, @dataAccessors, @_headerProviderClass, options, @depth = 0) ->
+    @_headerProvider = new @_headerProviderClass @
     super options
     @options.groupChildMargin = @options.treeNestedMargin
 
     # Create header
-    @_headerComponent = @_createHeaderComponent()
+    @_headerComponent = @_headerProvider.createHeader()
     @_headerComponent.tree = @ # debug
     # TODO think how to bind to dom rightly
     @addChild @_headerComponent
@@ -27,7 +28,7 @@ class StackTreeContainer extends StackContainer
         if @dataAccessors.isDep(childData) and ((i < childrenData.length - 1 and @dataAccessors.isDep(childrenData[i + 1])) or (i > 0 and @dataAccessors.isDep(childrenData[i - 1])))
           childOpts = _.merge { treeDepHasSurroundingDeps: true }, @options
 
-        childTree = new StackTreeContainer(childData, @dataAccessors, childOpts, @depth + 1)
+        childTree = new StackTreeContainer(childData, @dataAccessors, @_headerProviderClass, childOpts, @depth + 1)
         @_treeChildrenComponent.addChild childTree
         @_childTrees.push childTree
 
@@ -80,16 +81,24 @@ class StackTreeContainer extends StackContainer
     else
       @_animate(@_parentLine, animate).plot(points)
 
-  _createHeaderComponent: ->
-    if @dataAccessors.isDep @data
-      new StackHtmlDepElement @dataAccessors.getContent(@data), @dataAccessors.getDepContent(@data),
-        animationDuration: @options.animationDuration
-        depMainWidth: @options.treeWidth
-        depWidth: @options.treeWidth - @options.treeDepthShift * @depth
-        depIgnoreDepHeight: not @options.treeDepHasSurroundingDeps
-        depDasharray: @options.treeDepDasharray
-        depLineClass: @options.treeLineClass
+class StackTreeHeaderProvider
+  constructor: (@tree) ->
+
+  createHeader: ->
+    if @tree.dataAccessors.isDep @tree.data
+      new StackHtmlDepElement @tree.dataAccessors.getContent(@tree.data), @tree.dataAccessors.getDepContent(@tree.data),
+        animationDuration: @tree.options.animationDuration
+        depMainWidth: @tree.options.treeWidth
+        depWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
+        depIgnoreDepHeight: not @tree.options.treeDepHasSurroundingDeps
+        depDasharray: @tree.options.treeDepDasharray
+        depLineClass: @tree.options.treeLineClass
     else
-      new StackHtmlElement @dataAccessors.getContent(@data),
-        animationDuration: @options.animationDuration
-        htmlWidth: @options.treeWidth - @options.treeDepthShift * @depth
+      if @tree.depth is 0
+        new StackHtmlElement '<h1>[root]</h1>' + @tree.dataAccessors.getContent(@tree.data),
+          animationDuration: @tree.options.animationDuration
+          htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
+      else
+        new StackHtmlElement @tree.dataAccessors.getContent(@tree.data),
+          animationDuration: @tree.options.animationDuration
+          htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
