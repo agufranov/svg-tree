@@ -3,7 +3,7 @@ browserSync = require('browser-sync').create()
 reload = browserSync.reload
 path = require 'path'
 
-gulpDeps = ['watch', 'coffee', 'jade', 'stylus', 'sourcemaps', 'clean', 'debug', 'util', 'notify', 'plumber']
+gulpDeps = ['watch', 'coffee', 'jade', 'stylus', 'sourcemaps', 'clean', 'debug', 'util', 'notify', 'plumber', 'concat']
 
 gulpDeps.forEach (dep) -> eval "#{dep} = require('gulp-#{dep}')" # require each dep
 
@@ -12,6 +12,25 @@ gulpDeps.forEach (dep) -> eval "#{dep} = require('gulp-#{dep}')" # require each 
 gulp.task 'default', ['watch', 'copy-lib', 'browser-sync']
 
 gulp.task 'watch', ['watch-coffee', 'watch-jade', 'watch-stylus']
+
+gulp.task 'concat', ->
+  gulp.src [
+    'build/classes/stackElement.js'
+    'build/classes/stackHtmlElement.js'
+    'build/classes/stackAbstractContainer.js'
+    'build/classes/stackContainer.js'
+    'build/classes/stackRoot.js'
+    'build/classes/stackHorizontalContainer.js'
+    'build/classes/stackHtmlDepElement.js'
+    'build/classes/tree/stackHtmlElementWithCollapser.js'
+    'build/classes/tree/stackTreeContainer.js'
+    'build/classes/tree/structureTree.js'
+    'build/classes/tree/structureTreeArrow.js'
+    'build/classes/tree/structureTreeUnbindedX.js'
+  ]
+    .pipe concat 'svgTree.js'
+    .pipe gulp.dest '/home/anthrax/dev/vermilion/vermilion/ui/client/vendor/'
+
 
 gulp.task 'watch-coffee', ->
   gulp.src 'src/**/*.coffee'
