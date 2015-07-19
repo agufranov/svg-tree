@@ -74,40 +74,24 @@ $ ->
     getRootHeaderAdditionalContent: (data) -> data.add
     getParentContent: (data) -> data.parent
   }, StackTreeHeaderProvider, {
-    animationDuration: 300
+    animationDuration: 50
     treeDepDasharray: '10 2'
     treeRootLineToEnd: true
   }
   t.renderTo s
 
-  window.dep = t._treeComponent._childTrees[0]._headerComponent
-  window.randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
-  window.f = -> dep.c1.updateContent randh()
-  window.g = -> dep.c2.updateContent randh()
+  # window.dep = t._treeComponent._childTrees[0]._headerComponent
+  # window.randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
+  # window.f = -> dep.c1.updateContent randh()
+  # window.g = -> dep.c2.updateContent randh()
   
-  # window.h1 = new StackHtmlElement 'a'
-  # h2 = new StackHtmlElement 'b'
-  # g = new StackContainer
-  # g.addChild h1
-  # g.addChild h2
-  # g.renderTo s
-
-  # window.dep = t._childTrees[0]._childTrees[0]._childTrees[1]._childTrees[3]._children[0]
-
-  $('.content-wrapper').on 'click', (event) ->
-    tree = $(event.currentTarget).data('stack-element').tree
-    if tree
-      tree.toggleCollapse()
-
-  $(document).on 'click', '.dep-wrapper', (event) ->
-    dep = $(event.currentTarget).data('stack-element').dep
-    dep._leftComponent.updateContent randh()
-    dep._rightComponent.updateContent randh()
+  # $(document).on 'click', '.dep-wrapper', (event) ->
+  #   dep = $(event.currentTarget).data('stack-element').dep
+  #   dep._leftComponent.updateContent randh()
+  #   dep._rightComponent.updateContent randh()
   
+  # Prevent selection on double click
   $('div').mousedown ->
     setTimeout ->
       window.getSelection().removeAllRanges()
     , 0
-
-  # s.clear()
-  # window.r = s.rect 200, 50

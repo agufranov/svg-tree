@@ -8,6 +8,8 @@ class StackTreeContainer extends StackContainer
     super options
     @_headerProvider = new @_headerProviderClass @
     @options.groupChildMargin = @options.treeNestedMargin
+    @collapsed = false
+    @__collapsedCallbacks = []
 
     # Create header
     @_headerComponent = @_headerProvider.createHeader()
@@ -40,7 +42,12 @@ class StackTreeContainer extends StackContainer
     if @_treeChildrenComponent
       @_treeChildrenComponent.moveBy @options.treeDepthShift, 0
 
+  collapsible: -> @dataAccessors.getChildrenArray(@data)?.length > 0 and @depth > 0
+
   toggleCollapse: ->
+    return unless @collapsible()
+    @collapsed = not @collapsed
+    @_fireCollapsed()
     return unless @_treeChildrenComponent
     @_treeChildrenComponent.fadeToggle => @_arrange true
 
@@ -81,6 +88,13 @@ class StackTreeContainer extends StackContainer
     else
       @_animate(@_parentLine, animate).plot(points)
 
+  # Events
+  onCollapsed: (cb) ->
+    @__collapsedCallbacks.push cb
+
+  _fireCollapsed: (args...) ->
+    cb @, @collapsed for cb in @__collapsedCallbacks
+
 class StackTreeHeaderProvider
   constructor: (@tree) ->
 
@@ -94,9 +108,14 @@ class StackTreeHeaderProvider
         depDasharray: @tree.options.treeDepDasharray
         depLineClass: @tree.options.treeLineClass
     else
-      header = new StackHtmlElement @tree.dataAccessors.getContent(@tree.data),
-        animationDuration: @tree.options.animationDuration
-        htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
+      if @tree.collapsible()
+        header = new StackHtmlElementWithCollapser @tree.dataAccessors.getContent(@tree.data), @tree,
+          animationDuration: @tree.options.animationDuration
+          htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
+      else
+        header = new StackHtmlElement @tree.dataAccessors.getContent(@tree.data),
+          animationDuration: @tree.options.animationDuration
+          htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
       if @tree.depth is 0 and (additionalContent = @tree.dataAccessors.getRootHeaderAdditionalContent(@tree.data))
         h = new StackVerticalContainer
           animationDuration: @tree.options.animationDuration
@@ -109,12 +128,19 @@ class StackTreeHeaderProvider
           htmlWidth: @tree.options.treeWidth
           htmlRect: false
           ignoreHeight: true
+
+        # debug
+        header.prepended.push '<div>1</div>'
+        header.prepended.push '<div>2</div>'
+        header.appended.push '<div>3</div>'
+        header.appended.push '<div>4</div>'
         f = ->
           randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
           header.updateContent randh()
           headerAddition.updateContent randh()
         header.on 'click', f
         headerAddition.on 'click', f
+
         h.addChild header
         h.addChild headerAddition
         h

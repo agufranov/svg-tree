@@ -2,6 +2,8 @@ class StackHtmlElement extends StackElement
   constructor: (@content, options) ->
     super options
     @__wrapperEventHandlers = []
+    @prepended = []
+    @appended = []
 
   getDefaultOptions: -> _.merge super(), htmlPadding: 10, htmlWidth: null, htmlWrapperClass: 'content-wrapper', htmlRect: true
 
@@ -21,10 +23,17 @@ class StackHtmlElement extends StackElement
         .get 0
       while @__wrapperEventHandlers.length > 0
         t = @__wrapperEventHandlers.shift()
-        $(@_wrapper).on t.name, t.handler
+        $(@_wrapper).on t...
 
-    $(@_wrapper).html @content
-    # @_wrapperPostProcess()
+    innerWrapper = $('<div>').addClass('stack-html-inner-wrapper')
+    innerWrapper.html @content
+    $(@_wrapper).html innerWrapper
+
+    for el in @prepended
+      innerWrapper.before el
+
+    for el in @appended
+      $(@_wrapper).append el
 
     foNode = @_foreignObject.node
     foNode.removeChild(foNode.firstChild) while foNode.firstChild
@@ -37,15 +46,12 @@ class StackHtmlElement extends StackElement
 
   getHeight: -> @height
 
-  # _wrapperPostProcess: ->
-  #   $(@_wrapper).append $('<h3>').css(float: 'right').html('hi')
-
   updateContent: (content) ->
     @content = content
     @_renderContents true
 
-  on: (eventName, eventHandler) ->
+  on: (args...) ->
     if @_wrapper
-      $(@_wrapper).on eventName, eventHandler
+      $(@_wrapper).on args...
     else
-      @__wrapperEventHandlers.push { name: eventName, handler: eventHandler }
+      @__wrapperEventHandlers.push args
