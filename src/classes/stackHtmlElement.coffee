@@ -16,7 +16,7 @@ class StackHtmlElement extends StackElement
       @_wrapper = $('<div>')
         .addClass @options.htmlWrapperClass
         .addClass @options.htmlWrapperAdditionalClass
-        .css padding: @options.htmlPadding, float: 'left', width: @options.htmlWidth
+        .css padding: @options.htmlPadding, float: 'left', width: @options.htmlWidth - 2 * @options.htmlPadding
         .data 'stack-element', @
         .get 0
       while @__wrapperEventHandlers.length > 0
@@ -24,17 +24,21 @@ class StackHtmlElement extends StackElement
         $(@_wrapper).on t.name, t.handler
 
     $(@_wrapper).html @content
+    # @_wrapperPostProcess()
 
     foNode = @_foreignObject.node
     foNode.removeChild(foNode.firstChild) while foNode.firstChild
     foNode.appendChild @_wrapper
-    wrapperSize = [ $(@_wrapper).width(), $(@_wrapper).outerHeight() ]
+    wrapperSize = [ $(@_wrapper).outerWidth(), $(@_wrapper).outerHeight() ]
     @height = wrapperSize[1]
     @_animate(@_rect, animate).size(wrapperSize...) if @options.htmlRect
     @_animate(@_foreignObject, animate).size(wrapperSize...)
     @_fireHeightChanged()
 
   getHeight: -> @height
+
+  # _wrapperPostProcess: ->
+  #   $(@_wrapper).append $('<h3>').css(float: 'right').html('hi')
 
   updateContent: (content) ->
     @content = content
