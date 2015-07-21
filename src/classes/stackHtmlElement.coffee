@@ -35,7 +35,6 @@ class StackHtmlElement extends StackElement
     # Hackish
     $(@_wrapper).appendTo document.body
     wrapperSize = [ $(@_wrapper).outerWidth(), $(@_wrapper).outerHeight() ]
-    console.log "height: #{wrapperSize[1]}"
     $(@_wrapper).remove()
 
     foNode = @_foreignObject.node

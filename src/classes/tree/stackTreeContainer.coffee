@@ -22,14 +22,14 @@ class StackTreeContainer extends StackContainer
     childrenData = @dataAccessors.getChildrenArray @data
     unbindedData = @dataAccessors.getUnbindedArray @data
     @_rootLineToEnd = !!unbindedData
-    if childrenData or unbindedData
+    if _.any(childrenData) or _.any(unbindedData)
       @_treeAllChildrenComponent = @addChild new StackContainer groupChildMargin: 0, animationDuration: @options.animationDuration
-      if childrenData
+      if _.any(childrenData)
         @_treeOwnChildrenComponent = @_treeAllChildrenComponent.addChild new StackContainer groupChildMargin: @options.treeFlatMargin, animationDuration: @options.animationDuration
         @_childTrees = []
         @_addTrees childrenData, @_childTrees, @_treeOwnChildrenComponent
 
-      if unbindedData
+      if _.any(unbindedData)
         @_unbindedTrees = []
         @_treeAllChildrenComponent.addChild new StructureTreeUnbindedX xMargin: -(@options.treeDepthShift - @options.treeParentLineMargin), animationDuration: @options.animationDuration
         @_treeUnbindedChildrenComponent = @_treeAllChildrenComponent.addChild new StackContainer groupChildMargin: 0, animationDuration: @options.animationDuration
@@ -162,18 +162,6 @@ class StackTreeHeaderProvider
           htmlWidth: @tree.options.treeWidth
           htmlRect: false
           ignoreHeight: true
-
-        # debug
-        header.prepended.push '<div>1</div>'
-        header.prepended.push '<div>2</div>'
-        header.appended.push '<div>3</div>'
-        header.appended.push '<div>4</div>'
-        f = ->
-          randh = -> "<div style='height: #{Math.round(Math.random() * 5) * 50}px'>A</div>"
-          header.updateContent randh()
-          headerAddition.updateContent randh()
-        header.on 'click', f
-        headerAddition.on 'click', f
 
         h.addChild header
         h.addChild headerAddition
