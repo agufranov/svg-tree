@@ -19,8 +19,15 @@ class StackHtmlDepElement extends StackVerticalContainer
 
   _drawArrow: ->
     h2 = @getHeight() / 2
-    points = [[@options.depWidth, h2], [@options.vertMargin, h2]]
+    m = @options.vertMargin
+    points = [
+      [@options.depWidth, h2]
+      [m, h2]
+      [m - 10, h2 - 4]
+      [m - 10, h2 + 4]
+      [m, h2]
+    ]
     if not @_arrow
-      @_arrow = @_el.polyline(points).stroke(@options.depLineStroke)
+      @_arrow = @_el.polyline(points).stroke(@options.depLineStroke).fill(@options.depLineStroke)
     else
       @_animate(@_arrow, true).plot(points)
