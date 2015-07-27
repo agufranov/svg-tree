@@ -133,6 +133,7 @@ class StackTreeHeaderProvider
         depMainWidth: @tree.options.treeWidth
         depWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
         depIgnoreDepHeight: not @tree.options.treeDepHasSurroundingDeps
+        depRectFill: @tree.options.treeDepRectFill
         depDasharray: @tree.options.treeDepDasharray
         depLineStroke: @tree.options.treeLineStroke
     else
