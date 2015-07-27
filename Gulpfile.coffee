@@ -4,7 +4,7 @@ reload = browserSync.reload
 path = require 'path'
 runSequence = require 'run-sequence'
 
-gulpDeps = ['watch', 'coffee', 'jade', 'stylus', 'sourcemaps', 'clean', 'debug', 'util', 'notify', 'plumber', 'concat']
+gulpDeps = ['watch', 'coffee', 'jade', 'stylus', 'sourcemaps', 'clean', 'debug', 'util', 'notify', 'plumber', 'concat', 'uglify']
 
 gulpDeps.forEach (dep) -> eval "#{dep} = require('gulp-#{dep}')" # require each dep
 
@@ -39,8 +39,9 @@ gulp.task 'concat-concat', ->
     'concat/classes/tree/structureTreeFactory.js'
   ]
     .pipe concat 'svgTree.js'
+    .pipe uglify()
     # .pipe gulp.dest '.'
-    .pipe gulp.dest '/home/anthrax/dev/vermilion/vermilion/ui/client/vendor/'
+    .pipe gulp.dest '/home/agufranov/dev/vermilion/vermilion/ui/client/vendor/'
     
 gulp.task 'concat-cleanup', ->
   gulp.src 'concat'
