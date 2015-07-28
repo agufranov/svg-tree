@@ -7,6 +7,11 @@ class StackHtmlElementWithCollapser extends StackHtmlElement
       event.preventDefault()
       @tree.toggleCollapse()
 
+    @on 'mousedown', (event) ->
+      setTimeout ->
+        window.getSelection().removeAllRanges()
+      , 0
+
     @tree.onCollapsed =>
       @_updateCollapser()
 

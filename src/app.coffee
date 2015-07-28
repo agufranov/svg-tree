@@ -27,9 +27,3 @@ $ ->
     dep = $(event.currentTarget).data('stack-element').dep
     dep._leftComponent.updateContent randh()
     dep._rightComponent.updateContent randh()
-  
-  # Prevent selection on double click
-  $('div').mousedown ->
-    setTimeout ->
-      window.getSelection().removeAllRanges()
-    , 0
