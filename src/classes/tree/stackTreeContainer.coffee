@@ -58,7 +58,7 @@ class StackTreeContainer extends StackContainer
     if @_treeAllChildrenComponent
       @_treeAllChildrenComponent.moveBy @options.treeDepthShift, 0
 
-  collapsible: -> @dataAccessors.getChildrenArray(@data)?.length > 0 and @depth > 0
+  collapsible: -> (@dataAccessors.getChildrenArray(@data)?.length > 0 and @depth > 0) or (@dataAccessors.getParentContent(@data))
 
   toggleCollapse: ->
     return unless @collapsible()
