@@ -1,4 +1,4 @@
-class StackRoot extends StackContainer
+class SVGTree.StackRoot extends SVGTree.StackContainer
   _childHeightChanged: (animate) ->
     super animate
     @_resizeSvgContainer()

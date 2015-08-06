@@ -1,4 +1,4 @@
-class StackElement
+class SVGTree.StackElement
   constructor: (@options = {}) ->
     _.defaults @options, @getDefaultOptions()
     @__heightChangedCallbacks = []

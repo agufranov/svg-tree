@@ -1,4 +1,4 @@
-class StackHtmlElementWithCollapser extends StackHtmlElement
+class SVGTree.StackHtmlElementWithCollapser extends SVGTree.StackHtmlElement
   constructor: (content, @tree, options) ->
     super content, options
     @appended.push $('<div>').addClass(@options.collapserWrapperClass)

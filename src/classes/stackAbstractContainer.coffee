@@ -1,4 +1,4 @@
-class StackAbstractContainer extends StackElement
+class SVGTree.StackAbstractContainer extends SVGTree.StackElement
   constructor: (options) ->
     super options
     @_children = []

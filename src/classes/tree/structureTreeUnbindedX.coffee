@@ -1,4 +1,4 @@
-class StructureTreeUnbindedX extends StackElement
+class SVGTree.StructureTreeUnbindedX extends SVGTree.StackElement
   renderTo: (_parentEl) ->
     super _parentEl
     @_el.text('x').stroke(color: 'red', width: 0.3)

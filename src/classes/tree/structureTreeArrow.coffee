@@ -1,4 +1,4 @@
-class StructureTreeArrow extends StackElement
+class SVGTree.StructureTreeArrow extends SVGTree.StackElement
   renderTo: (_parentEl) ->
     super _parentEl
     [mw, pos, rw, rh, cw, pad] = _.values _.pick @options, 'arrowMainWidth', 'arrowPosition', 'arrowRootWidth', 'arrowRootHeight', 'arrowCapWidth', 'arrowPadding'

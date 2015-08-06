@@ -1,4 +1,4 @@
-class StackVerticalContainer extends StackAbstractContainer
+class SVGTree.StackVerticalContainer extends SVGTree.StackAbstractContainer
   constructor: (options) ->
     super options
 

@@ -1,4 +1,4 @@
-class StackTreeContainer extends StackContainer
+class SVGTree.StackTreeContainer extends SVGTree.StackContainer
   # TODO Maybe get out the code which is binded with data implementation details (i.e. deps)
   # TODO 0-level child margin should be greater as on photo
   # TODO [DONE] Parent SVG resizing
@@ -23,18 +23,18 @@ class StackTreeContainer extends StackContainer
     unbindedData = @dataAccessors.getUnbindedArray @data
     @_rootLineToEnd = !!unbindedData
     if _.any(childrenData) or _.any(unbindedData)
-      @_treeAllChildrenComponent = @addChild new StackContainer groupChildMargin: 0, animationDuration: @options.animationDuration
+      @_treeAllChildrenComponent = @addChild new SVGTree.StackContainer groupChildMargin: 0, animationDuration: @options.animationDuration
       if _.any(childrenData)
-        @_treeOwnChildrenComponent = @_treeAllChildrenComponent.addChild new StackContainer groupChildMargin: @options.treeFlatMargin, animationDuration: @options.animationDuration
+        @_treeOwnChildrenComponent = @_treeAllChildrenComponent.addChild new SVGTree.StackContainer groupChildMargin: @options.treeFlatMargin, animationDuration: @options.animationDuration
         @_childTrees = []
         @_addTrees childrenData, @_childTrees, @_treeOwnChildrenComponent
 
       if _.any(unbindedData)
         @_unbindedTrees = []
-        @_treeAllChildrenComponent.addChild new StructureTreeUnbindedX xMargin: -(@options.treeDepthShift - @options.treeParentLineMargin), animationDuration: @options.animationDuration
-        @_treeUnbindedChildrenComponent = @_treeAllChildrenComponent.addChild new StackContainer groupChildMargin: 0, animationDuration: @options.animationDuration
-        @_treeUnbindedChildrenComponent.addChild new StackHtmlElement "<div style='width: #{@options.treeWidth - @options.treeDepthShift}px; text-align: right; font-size: 12px; margin-bottom: 5px; color: red;'>unbinded</div>", htmlRect: false, htmlWidth: @options.treeWidth - @options.treeDepthShift, htmlMinHeight: null, htmlPadding: 0, animationDuration: @options.animationDuration
-        @_treeUnbindedChildrenTreesComponent = @_treeUnbindedChildrenComponent.addChild new StackContainer groupChildMargin: @options.treeFlatMargin, animationDuration: @options.animationDuration
+        @_treeAllChildrenComponent.addChild new SVGTree.StructureTreeUnbindedX xMargin: -(@options.treeDepthShift - @options.treeParentLineMargin), animationDuration: @options.animationDuration
+        @_treeUnbindedChildrenComponent = @_treeAllChildrenComponent.addChild new SVGTree.StackContainer groupChildMargin: 0, animationDuration: @options.animationDuration
+        @_treeUnbindedChildrenComponent.addChild new SVGTree.StackHtmlElement "<div style='width: #{@options.treeWidth - @options.treeDepthShift}px; text-align: right; font-size: 12px; margin-bottom: 5px; color: red;'>unbinded</div>", htmlRect: false, htmlWidth: @options.treeWidth - @options.treeDepthShift, htmlMinHeight: null, htmlPadding: 0, animationDuration: @options.animationDuration
+        @_treeUnbindedChildrenTreesComponent = @_treeUnbindedChildrenComponent.addChild new SVGTree.StackContainer groupChildMargin: @options.treeFlatMargin, animationDuration: @options.animationDuration
         @_addTrees unbindedData, @_unbindedTrees, @_treeUnbindedChildrenTreesComponent, treeDrawChildLine: false, treeRectFill: @options.treeUnbindedRectFill, treeRectStrokeColor: @options.treeUnbindedRectStrokeColor, treeRectStrokeDasharray: @options.treeUnbindedRectStrokeDasharray
 
   _addTrees: (childrenData, arrayToStore, container, options) ->
@@ -46,7 +46,7 @@ class StackTreeContainer extends StackContainer
       if @dataAccessors.isDep(childData) and ((i < childrenData.length - 1 and @dataAccessors.isDep(childrenData[i + 1])) or (i > 0 and @dataAccessors.isDep(childrenData[i - 1])))
         _.extend childOpts, { treeDepHasSurroundingDeps: true }
       _.extend childOpts, options
-      childTree = new StackTreeContainer(childData, @dataAccessors, @_headerProviderClass, childOpts, @depth + 1)
+      childTree = new SVGTree.StackTreeContainer(childData, @dataAccessors, @_headerProviderClass, childOpts, @depth + 1)
       container.addChild childTree
       arrayToStore.push childTree
 
@@ -123,12 +123,12 @@ class StackTreeContainer extends StackContainer
   _fireCollapsed: (args...) ->
     cb @, @collapsed for cb in @__collapsedCallbacks
 
-class StackTreeHeaderProvider
+class SVGTree.StackTreeHeaderProvider
   constructor: (@tree) ->
 
   createHeader: ->
     if @tree.dataAccessors.isDep @tree.data
-      new StackHtmlDepElement @tree.dataAccessors.getContent(@tree.data), @tree.dataAccessors.getDepContent(@tree.data),
+      new SVGTree.StackHtmlDepElement @tree.dataAccessors.getContent(@tree.data), @tree.dataAccessors.getDepContent(@tree.data),
         animationDuration: @tree.options.animationDuration
         depMainWidth: @tree.options.treeWidth
         depWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
@@ -138,27 +138,27 @@ class StackTreeHeaderProvider
         depLineStroke: @tree.options.treeLineStroke
     else
       if @tree.collapsible()
-        header = new StackHtmlElementWithCollapser @tree.dataAccessors.getContent(@tree.data), @tree,
+        header = new SVGTree.StackHtmlElementWithCollapser @tree.dataAccessors.getContent(@tree.data), @tree,
           animationDuration: @tree.options.animationDuration
           htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
           htmlRectFill: @tree.options.treeRectFill
           htmlRectStrokeColor: @tree.options.treeRectStrokeColor
           htmlRectStrokeDasharray: @tree.options.treeRectStrokeDasharray
       else
-        header = new StackHtmlElement @tree.dataAccessors.getContent(@tree.data),
+        header = new SVGTree.StackHtmlElement @tree.dataAccessors.getContent(@tree.data),
           animationDuration: @tree.options.animationDuration
           htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
           htmlRectFill: @tree.options.treeRectFill
           htmlRectStrokeColor: @tree.options.treeRectStrokeColor
           htmlRectStrokeDasharray: @tree.options.treeRectStrokeDasharray
       if @tree.depth is 0 and not @tree.dataAccessors.hasDeps(@tree.data)
-        h = new StackVerticalContainer
+        h = new SVGTree.StackVerticalContainer
           animationDuration: @tree.options.animationDuration
           vertMargin: @tree.options.treeWidth
         # new StackHtmlElement '<h1>[root]</h1>' + @tree.dataAccessors.getContent(@tree.data),
         #   animationDuration: @tree.options.animationDuration
         #   htmlWidth: @tree.options.treeWidth - @tree.options.treeDepthShift * @tree.depth
-        headerAddition = new StackHtmlElement  '<span class="root-header-addition">There are no service dependencies</span>',
+        headerAddition = new SVGTree.StackHtmlElement  '<span class="root-header-addition">There are no service dependencies</span>',
           animationDuration: @tree.options.animationDuration
           htmlWidth: @tree.options.treeWidth
           htmlRect: false

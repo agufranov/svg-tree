@@ -1,4 +1,4 @@
-class StackHtmlElement extends StackElement
+class SVGTree.StackHtmlElement extends SVGTree.StackElement
   constructor: (@content, options) ->
     super options
     @__wrapperEventHandlers = []

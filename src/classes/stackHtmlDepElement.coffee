@@ -1,11 +1,11 @@
-class StackHtmlDepElement extends StackVerticalContainer
+class SVGTree.StackHtmlDepElement extends SVGTree.StackVerticalContainer
   # TODO Arrow
   constructor: (@leftContent, @rightContent, options) ->
     super options
     leftOptions = _.extend htmlWidth: @options.depWidth, htmlWrapperAdditionalClass: 'dep-wrapper', htmlRectFill: @options.depRectFill, htmlRectStrokeDasharray: @options.depDasharray, @options
     rightOptions = _.extend htmlWidth: @options.depMainWidth, htmlWrapperAdditionalClass: 'dep-wrapper', ignoreHeight: @options.depIgnoreDepHeight, @options
-    @_leftComponent = new StackHtmlElement @leftContent, leftOptions
-    @_rightComponent = new StackHtmlElement @rightContent, rightOptions
+    @_leftComponent = new SVGTree.StackHtmlElement @leftContent, leftOptions
+    @_rightComponent = new SVGTree.StackHtmlElement @rightContent, rightOptions
     @addChild @_leftComponent
     @addChild @_rightComponent
 
